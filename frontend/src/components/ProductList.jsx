@@ -15,6 +15,9 @@ function ProductRow({ product, onChanged }) {
   const [showWasteForm, setShowWasteForm] = useState(false);
   const [reason, setReason] = useState(WASTE_REASONS[0]);
   const [busy, setBusy] = useState(false);
+  const [showRecipes, setShowRecipes] = useState(false);
+  const [recipes, setRecipes] = useState(null);
+  const [recipesLoading, setRecipesLoading] = useState(false);
 
   const markConsumed = async () => {
     setBusy(true);
@@ -42,7 +45,25 @@ function ProductRow({ product, onChanged }) {
     }
   };
 
+  // Feature #2: recipe ideas for this product's category. Fetched once,
+  // the first time you open the panel - toggling it closed and back
+  // open again just re-shows what we already have.
+  const toggleRecipes = async () => {
+    const willShow = !showRecipes;
+    setShowRecipes(willShow);
+    if (willShow && recipes === null) {
+      setRecipesLoading(true);
+      try {
+        const response = await apiClient.get(`/products/${product.id}/recipes`);
+        setRecipes(response.data);
+      } finally {
+        setRecipesLoading(false);
+      }
+    }
+  };
+
   return (
+    <>
     <tr style={{ borderBottom: "1px solid #eee" }}>
       <td style={{ padding: "8px 4px" }}>{product.name}</td>
       <td style={{ padding: "8px 4px" }}>
@@ -80,9 +101,32 @@ function ProductRow({ product, onChanged }) {
               Cancel
             </button>
           </>
-        )}
+        )}{" "}
+        <button onClick={toggleRecipes}>{showRecipes ? "Hide recipes" : "Recipes"}</button>
       </td>
     </tr>
+    {showRecipes && (
+      <tr>
+        <td colSpan={6} style={{ padding: "8px 4px 16px", background: "#fafafa" }}>
+          {recipesLoading && <p>Loading recipes...</p>}
+          {!recipesLoading && recipes && recipes.length === 0 && (
+            <p>No recipe suggestions for this category yet.</p>
+          )}
+          {!recipesLoading &&
+            recipes &&
+            recipes.map((recipe) => (
+              <div key={recipe.title} style={{ marginBottom: 12 }}>
+                <strong>{recipe.title}</strong> — {recipe.description}
+                <br />
+                <em>Ingredients:</em> {recipe.ingredients.join(", ")}
+                <br />
+                <em>Instructions:</em> {recipe.instructions}
+              </div>
+            ))}
+        </td>
+      </tr>
+    )}
+    </>
   );
 }
 
