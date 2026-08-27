@@ -5,6 +5,7 @@ import AddCategoryForm from "../components/AddCategoryForm";
 import AddProductForm from "../components/AddProductForm";
 import ProductList from "../components/ProductList";
 import NotificationsWidget from "../components/NotificationsWidget";
+import TipWidget from "../components/TipWidget";
 
 /** The main screen: your pantry, what's in it, and what to do with each item. */
 export default function PantryPage() {
@@ -70,6 +71,7 @@ export default function PantryPage() {
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       <NotificationsWidget key={notificationsRefreshKey} />
+      <TipWidget />
 
       {categories.length === 0 ? (
         <AddCategoryForm onCategoryAdded={handleCategoryAdded} />
