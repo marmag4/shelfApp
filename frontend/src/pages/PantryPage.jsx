@@ -89,6 +89,7 @@ export default function PantryPage() {
                 products={products}
                 onChanged={handleProductChanged}
                 sharingPoints={sharingPoints}
+                categories={categories}
               />
             </>
           )}

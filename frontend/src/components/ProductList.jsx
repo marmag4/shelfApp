@@ -4,7 +4,7 @@ import apiClient from "../api/client";
 const WASTE_REASONS = ["EXPIRED", "SPOILED", "OVERBOUGHT", "OTHER"];
 
 /** One row per product, with the "Consumed" / "Wasted" / "Donate" actions for active items. */
-function ProductRow({ product, onChanged, sharingPoints }) {
+function ProductRow({ product, onChanged, sharingPoints, categories }) {
   const [showWasteForm, setShowWasteForm] = useState(false);
   const [reason, setReason] = useState(WASTE_REASONS[0]);
   const [busy, setBusy] = useState(false);
@@ -13,6 +13,9 @@ function ProductRow({ product, onChanged, sharingPoints }) {
   const [recipesLoading, setRecipesLoading] = useState(false);
   const [showDonateForm, setShowDonateForm] = useState(false);
   const [sharingPointId, setSharingPointId] = useState(sharingPoints[0]?.id ?? "");
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editForm, setEditForm] = useState(null);
+  const [editError, setEditError] = useState(null);
 
   const markConsumed = async () => {
     setBusy(true);
@@ -49,6 +52,49 @@ function ProductRow({ product, onChanged, sharingPoints }) {
       // status to DONATED, so we mirror that locally.
       onChanged({ ...product, status: "DONATED" });
       setShowDonateForm(false);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Opens the edit form pre-filled with the product's current details.
+  const toggleEdit = () => {
+    if (!showEditForm) {
+      setEditForm({
+        name: product.name,
+        quantity: product.quantity,
+        unit: product.unit,
+        expiryDate: product.expiryDate,
+        categoryId: product.categoryId,
+      });
+      setEditError(null);
+    }
+    setShowEditForm(!showEditForm);
+  };
+
+  const handleEditChange = (event) => {
+    setEditForm({ ...editForm, [event.target.name]: event.target.value });
+  };
+
+  const submitEdit = async (event) => {
+    event.preventDefault();
+    setEditError(null);
+    setBusy(true);
+    try {
+      const response = await apiClient.put(`/products/${product.id}`, {
+        name: editForm.name,
+        quantity: Number(editForm.quantity),
+        unit: editForm.unit,
+        expiryDate: editForm.expiryDate,
+        categoryId: Number(editForm.categoryId),
+      });
+      onChanged(response.data);
+      setShowEditForm(false);
+    } catch (err) {
+      const fields = err.response?.data?.fields;
+      setEditError(
+        fields ? Object.values(fields).join(" ") : err.response?.data?.error || "Could not update product.",
+      );
     } finally {
       setBusy(false);
     }
@@ -142,9 +188,74 @@ function ProductRow({ product, onChanged, sharingPoints }) {
             <button className="btn btn-sm btn-ghost" onClick={toggleRecipes}>
               {showRecipes ? "Hide recipes" : "🍳 Recipes"}
             </button>
+            <button className="btn btn-sm btn-ghost" onClick={toggleEdit} disabled={busy}>
+              {showEditForm ? "Cancel edit" : "✏️ Edit"}
+            </button>
           </div>
         </td>
       </tr>
+      {showEditForm && editForm && (
+        <tr>
+          <td colSpan={6} style={{ padding: "0 10px 16px", border: "none" }}>
+            <form onSubmit={submitEdit} className="recipe-panel">
+              <div className="form-grid">
+                <div>
+                  <label className="field-label">Name</label>
+                  <input className="input" name="name" value={editForm.name} onChange={handleEditChange} required />
+                </div>
+                <div style={{ width: 90 }}>
+                  <label className="field-label">Quantity</label>
+                  <input
+                    className="input"
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    name="quantity"
+                    value={editForm.quantity}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </div>
+                <div style={{ width: 100 }}>
+                  <label className="field-label">Unit</label>
+                  <input className="input" name="unit" value={editForm.unit} onChange={handleEditChange} required />
+                </div>
+                <div>
+                  <label className="field-label">Expiry date</label>
+                  <input
+                    className="input"
+                    type="date"
+                    name="expiryDate"
+                    value={editForm.expiryDate}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="field-label">Category</label>
+                  <select
+                    className="input"
+                    name="categoryId"
+                    value={editForm.categoryId}
+                    onChange={handleEditChange}
+                    required
+                  >
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <button type="submit" className="btn btn-primary" disabled={busy}>
+                  {busy ? "Saving..." : "Save changes"}
+                </button>
+              </div>
+              {editError && <p className="form-error">{editError}</p>}
+            </form>
+          </td>
+        </tr>
+      )}
       {showRecipes && (
         <tr>
           <td colSpan={6} style={{ padding: "0 10px 16px", border: "none" }}>
@@ -172,7 +283,7 @@ function ProductRow({ product, onChanged, sharingPoints }) {
   );
 }
 
-export default function ProductList({ products, onChanged, sharingPoints }) {
+export default function ProductList({ products, onChanged, sharingPoints, categories }) {
   return (
     <div className="card">
       <p className="card-title">Your pantry</p>
@@ -192,7 +303,13 @@ export default function ProductList({ products, onChanged, sharingPoints }) {
           </thead>
           <tbody>
             {products.map((p) => (
-              <ProductRow key={p.id} product={p} onChanged={onChanged} sharingPoints={sharingPoints} />
+              <ProductRow
+                key={p.id}
+                product={p}
+                onChanged={onChanged}
+                sharingPoints={sharingPoints}
+                categories={categories}
+              />
             ))}
           </tbody>
         </table>
