@@ -11,13 +11,15 @@ const STATUS_COLORS = {
 const WASTE_REASONS = ["EXPIRED", "SPOILED", "OVERBOUGHT", "OTHER"];
 
 /** One row per product, with the "Consumed" / "Wasted" actions for active items. */
-function ProductRow({ product, onChanged }) {
+function ProductRow({ product, onChanged, sharingPoints }) {
   const [showWasteForm, setShowWasteForm] = useState(false);
   const [reason, setReason] = useState(WASTE_REASONS[0]);
   const [busy, setBusy] = useState(false);
   const [showRecipes, setShowRecipes] = useState(false);
   const [recipes, setRecipes] = useState(null);
   const [recipesLoading, setRecipesLoading] = useState(false);
+  const [showDonateForm, setShowDonateForm] = useState(false);
+  const [sharingPointId, setSharingPointId] = useState(sharingPoints[0]?.id ?? "");
 
   const markConsumed = async () => {
     setBusy(true);
@@ -40,6 +42,20 @@ function ProductRow({ product, onChanged }) {
       // instead of doing a second request just to re-read it.
       onChanged({ ...product, status: "WASTED" });
       setShowWasteForm(false);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Feature #4: donate the product to a sharing point instead of wasting it.
+  const confirmDonate = async () => {
+    setBusy(true);
+    try {
+      await apiClient.post("/donations", { productId: product.id, sharingPointId });
+      // Same idea as waste: the backend already flips the product's
+      // status to DONATED, so we mirror that locally.
+      onChanged({ ...product, status: "DONATED" });
+      setShowDonateForm(false);
     } finally {
       setBusy(false);
     }
@@ -75,14 +91,19 @@ function ProductRow({ product, onChanged }) {
         {product.status}
       </td>
       <td style={{ padding: "8px 4px" }}>
-        {product.status === "ACTIVE" && !showWasteForm && (
+        {product.status === "ACTIVE" && !showWasteForm && !showDonateForm && (
           <>
             <button onClick={markConsumed} disabled={busy}>
               Consumed
             </button>{" "}
             <button onClick={() => setShowWasteForm(true)} disabled={busy}>
               Wasted
-            </button>
+            </button>{" "}
+            {sharingPoints.length > 0 && (
+              <button onClick={() => setShowDonateForm(true)} disabled={busy}>
+                Donate
+              </button>
+            )}
           </>
         )}
         {showWasteForm && (
@@ -98,6 +119,23 @@ function ProductRow({ product, onChanged }) {
               Confirm
             </button>{" "}
             <button onClick={() => setShowWasteForm(false)} disabled={busy}>
+              Cancel
+            </button>
+          </>
+        )}
+        {showDonateForm && (
+          <>
+            <select value={sharingPointId} onChange={(e) => setSharingPointId(e.target.value)}>
+              {sharingPoints.map((sp) => (
+                <option key={sp.id} value={sp.id}>
+                  {sp.name} ({sp.city})
+                </option>
+              ))}
+            </select>{" "}
+            <button onClick={confirmDonate} disabled={busy}>
+              Confirm
+            </button>{" "}
+            <button onClick={() => setShowDonateForm(false)} disabled={busy}>
               Cancel
             </button>
           </>
@@ -130,7 +168,7 @@ function ProductRow({ product, onChanged }) {
   );
 }
 
-export default function ProductList({ products, onChanged }) {
+export default function ProductList({ products, onChanged, sharingPoints }) {
   if (products.length === 0) {
     return <p>No products yet — add your first one above.</p>;
   }
@@ -149,7 +187,7 @@ export default function ProductList({ products, onChanged }) {
       </thead>
       <tbody>
         {products.map((p) => (
-          <ProductRow key={p.id} product={p} onChanged={onChanged} />
+          <ProductRow key={p.id} product={p} onChanged={onChanged} sharingPoints={sharingPoints} />
         ))}
       </tbody>
     </table>
