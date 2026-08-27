@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import apiClient from "../api/client";
-import { useAuth } from "../context/AuthContext";
 import AddCategoryForm from "../components/AddCategoryForm";
 import AddProductForm from "../components/AddProductForm";
 import ProductList from "../components/ProductList";
 import NotificationsWidget from "../components/NotificationsWidget";
 import TipWidget from "../components/TipWidget";
 import AddSharingPointForm from "../components/AddSharingPointForm";
+import NavBar from "../components/NavBar";
 
 /** The main screen: your pantry, what's in it, and what to do with each item. */
 export default function PantryPage() {
-  const { logout } = useAuth();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [sharingPoints, setSharingPoints] = useState([]);
@@ -71,10 +70,7 @@ export default function PantryPage() {
 
   return (
     <div style={{ maxWidth: 900, margin: "40px auto", fontFamily: "sans-serif", padding: "0 16px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h1>ShelfApp — Your Pantry</h1>
-        <button onClick={logout}>Log out</button>
-      </div>
+      <NavBar />
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
