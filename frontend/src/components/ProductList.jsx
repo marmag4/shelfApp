@@ -208,8 +208,8 @@ function ProductRow({ product, onChanged, sharingPoints, categories }) {
                   <input
                     className="input"
                     type="number"
-                    step="0.01"
-                    min="0.01"
+                    step="0.5"
+                    min="0"
                     name="quantity"
                     value={editForm.quantity}
                     onChange={handleEditChange}

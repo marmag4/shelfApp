@@ -61,8 +61,8 @@ export default function AddProductForm({ categories, onProductAdded }) {
           <input
             className="input"
             type="number"
-            step="0.01"
-            min="0.01"
+            step="0.5"
+            min="0"
             name="quantity"
             value={form.quantity}
             onChange={handleChange}

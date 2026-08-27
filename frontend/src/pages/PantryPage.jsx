@@ -19,6 +19,10 @@ export default function PantryPage() {
   // (given this as its key) remounts and re-fetches - e.g. a product
   // that just got marked WASTED should drop off the "expiring soon" list.
   const [notificationsRefreshKey, setNotificationsRefreshKey] = useState(0);
+  // Whether the "add a category" form is open - only relevant once at
+  // least one category already exists (otherwise it's always shown,
+  // forced, since you can't add a product with zero categories).
+  const [showAddCategory, setShowAddCategory] = useState(false);
 
   // Loads both lists in parallel when the page first opens.
   const loadData = async () => {
@@ -58,6 +62,7 @@ export default function PantryPage() {
 
   const handleCategoryAdded = (newCategory) => {
     setCategories([...categories, newCategory]);
+    setShowAddCategory(false);
   };
 
   const handleSharingPointAdded = (newSharingPoint) => {
@@ -82,6 +87,20 @@ export default function PantryPage() {
           ) : (
             <>
               <AddProductForm categories={categories} onProductAdded={handleProductAdded} />
+
+              <div style={{ marginBottom: 20 }}>
+                {!showAddCategory ? (
+                  <button className="btn btn-ghost btn-sm" onClick={() => setShowAddCategory(true)}>
+                    + Add category
+                  </button>
+                ) : (
+                  <AddCategoryForm
+                    onCategoryAdded={handleCategoryAdded}
+                    introText='Add a new category (e.g. "Snacks", "Frozen foods"):'
+                  />
+                )}
+              </div>
+
               {sharingPoints.length === 0 && (
                 <AddSharingPointForm onSharingPointAdded={handleSharingPointAdded} />
               )}

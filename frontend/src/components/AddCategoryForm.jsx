@@ -2,12 +2,13 @@ import { useState } from "react";
 import apiClient from "../api/client";
 
 /**
- * A product always belongs to a category (Dairy, Fruits, ...), so at
- * least one category has to exist before the "add product" form makes
- * sense. This tiny form only shows up when the list is empty - normally
- * you'd only see it once, the very first time you use the app.
+ * A product always belongs to a category (Dairy, Fruits, ...). PantryPage
+ * shows this form in two situations: forced, the very first time (no
+ * categories exist yet at all), and afterwards on demand, behind a small
+ * "+ Add category" toggle - so you're never stuck with only the starter
+ * set of categories.
  */
-export default function AddCategoryForm({ onCategoryAdded }) {
+export default function AddCategoryForm({ onCategoryAdded, introText }) {
   const [name, setName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -30,8 +31,7 @@ export default function AddCategoryForm({ onCategoryAdded }) {
   return (
     <div className="card">
       <p style={{ marginTop: 0 }}>
-        You don't have any categories yet. Add one to get started (e.g. "Dairy", "Fruits",
-        "Vegetables"):
+        {introText || 'Add a new category (e.g. "Snacks", "Frozen foods"):'}
       </p>
       <form onSubmit={handleSubmit} className="form-grid">
         <input
