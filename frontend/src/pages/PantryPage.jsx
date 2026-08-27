@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import AddCategoryForm from "../components/AddCategoryForm";
 import AddProductForm from "../components/AddProductForm";
 import ProductList from "../components/ProductList";
+import NotificationsWidget from "../components/NotificationsWidget";
 
 /** The main screen: your pantry, what's in it, and what to do with each item. */
 export default function PantryPage() {
@@ -12,6 +13,10 @@ export default function PantryPage() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Bumped every time a product changes status, so <NotificationsWidget>
+  // (given this as its key) remounts and re-fetches - e.g. a product
+  // that just got marked WASTED should drop off the "expiring soon" list.
+  const [notificationsRefreshKey, setNotificationsRefreshKey] = useState(0);
 
   // Loads both lists in parallel when the page first opens.
   const loadData = async () => {
@@ -37,10 +42,14 @@ export default function PantryPage() {
 
   const handleProductAdded = (newProduct) => {
     setProducts([...products, newProduct]);
+    // A newly added product might already be expiring soon - refresh
+    // the notifications widget too, not just the product list.
+    setNotificationsRefreshKey((key) => key + 1);
   };
 
   const handleProductChanged = (updatedProduct) => {
     setProducts(products.map((p) => (p.id === updatedProduct.id ? updatedProduct : p)));
+    setNotificationsRefreshKey((key) => key + 1);
   };
 
   const handleCategoryAdded = (newCategory) => {
@@ -59,6 +68,8 @@ export default function PantryPage() {
       </div>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <NotificationsWidget key={notificationsRefreshKey} />
 
       {categories.length === 0 ? (
         <AddCategoryForm onCategoryAdded={handleCategoryAdded} />
