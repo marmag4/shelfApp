@@ -40,11 +40,29 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <!-- Just the password-hashing utility (BCrypt) - does NOT lock down
-                 the app like spring-boot-starter-security would. We add full
-                 login/JWT security as its own step later. -->
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
+            <!-- Full Spring Security: now that login/JWT exists, this locks
+                 every endpoint by default except the ones we explicitly
+                 permit (register, login, Swagger) - see SecurityConfig. -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <!-- JJWT: creates and verifies the JWT tokens issued at login. -->
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.12.6</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.12.6</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
