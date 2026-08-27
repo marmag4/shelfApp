@@ -11,6 +11,41 @@ services:
       - "5432:5432"
     volumes:
       - shelfapp_pgdata:/var/lib/postgresql/data
+      # Runs schema.sql automatically the very first time the database is
+      # created - so a fresh "docker compose up" gives you the full table
+      # structure with no manual step needed.
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      # Lets "backend" wait until Postgres is actually ready to accept
+      # connections, not just until the container has started.
+      test: ["CMD-SHELL", "pg_isready -U shelfapp_user -d shelfapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: shelfapp-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Overrides application.properties' "localhost" with the Docker
+      # network's service name - "db" is how containers on the same
+      # docker-compose network find each other, instead of an IP address.
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/shelfapp
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: shelfapp-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
 
 volumes:
   shelfapp_pgdata:
