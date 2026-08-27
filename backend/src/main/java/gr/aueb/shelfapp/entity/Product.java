@@ -73,6 +73,10 @@ public class Product {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public BigDecimal getQuantity() {
         return quantity;
     }
@@ -85,8 +89,16 @@ public class Product {
         return unit;
     }
 
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public LocalDate getExpiryDate() {
         return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public ProductStatus getStatus() {
@@ -99,6 +111,10 @@ public class Product {
 
     public Category getCategory() {
         return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public User getUser() {

@@ -51,6 +51,22 @@ public class ProductService {
         return toDto(getOwnedOrThrow(id, currentUserId));
     }
 
+    /** Edits a product's own details (name/quantity/unit/expiry/category) - not its status. */
+    public ProductDto update(Long id, CreateProductRequest request, Long currentUserId) {
+        Product product = getOwnedOrThrow(id, currentUserId);
+
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
+
+        product.setName(request.name());
+        product.setQuantity(request.quantity());
+        product.setUnit(request.unit());
+        product.setExpiryDate(request.expiryDate());
+        product.setCategory(category);
+
+        return toDto(productRepository.save(product));
+    }
+
     public ProductDto updateStatus(Long id, String newStatus, Long currentUserId) {
         Product product = getOwnedOrThrow(id, currentUserId);
 
