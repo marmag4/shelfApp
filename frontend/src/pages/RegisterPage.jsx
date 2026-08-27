@@ -8,6 +8,11 @@ export default function RegisterPage() {
     password: "",
     firstName: "",
     lastName: "",
+    birthDate: "",
+    city: "",
+    street: "",
+    streetNumber: "",
+    postalCode: "",
   });
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,7 +34,17 @@ export default function RegisterPage() {
     try {
       // POST /api/users is the registration endpoint - it's public
       // (no token needed yet, see SecurityConfig on the backend).
-      await apiClient.post("/users", form);
+      // The address/birthDate fields are optional on the backend - an
+      // empty string isn't a valid date, so we send null instead of ""
+      // for any of them the user left blank.
+      await apiClient.post("/users", {
+        ...form,
+        birthDate: form.birthDate || null,
+        city: form.city || null,
+        street: form.street || null,
+        streetNumber: form.streetNumber || null,
+        postalCode: form.postalCode || null,
+      });
       // Registration worked - send the new user to the login page to
       // sign in with their new account.
       navigate("/login");
@@ -100,6 +115,47 @@ export default function RegisterPage() {
               value={form.password}
               onChange={handleChange}
               required
+            />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Birth date (optional)</label>
+            <input
+              type="date"
+              name="birthDate"
+              className="input"
+              value={form.birthDate}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">City (optional)</label>
+            <input name="city" className="input" value={form.city} onChange={handleChange} />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Street (optional)</label>
+            <input name="street" className="input" value={form.street} onChange={handleChange} />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Street number (optional)</label>
+            <input
+              name="streetNumber"
+              className="input"
+              value={form.streetNumber}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Postal code (optional)</label>
+            <input
+              name="postalCode"
+              className="input"
+              value={form.postalCode}
+              onChange={handleChange}
             />
           </div>
 
