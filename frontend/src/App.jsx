@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import PantryPage from "./pages/PantryPage";
 import StatsPage from "./pages/StatsPage";
+import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 /**
@@ -28,6 +29,14 @@ function App() {
         element={
           <ProtectedRoute>
             <StatsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
           </ProtectedRoute>
         }
       />

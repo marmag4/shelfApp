@@ -49,76 +49,69 @@ export default function AddProductForm({ categories, onProductAdded }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        gap: 12,
-        flexWrap: "wrap",
-        alignItems: "flex-end",
-        margin: "16px 0 24px",
-        padding: 16,
-        border: "1px solid #ddd",
-        borderRadius: 6,
-      }}
-    >
-      <div>
-        <label>Name</label>
-        <br />
-        <input name="name" value={form.name} onChange={handleChange} required />
+    <form onSubmit={handleSubmit} className="card">
+      <p className="card-title">Add a product</p>
+      <div className="form-grid">
+        <div>
+          <label className="field-label">Name</label>
+          <input className="input" name="name" value={form.name} onChange={handleChange} required />
+        </div>
+        <div style={{ width: 90 }}>
+          <label className="field-label">Quantity</label>
+          <input
+            className="input"
+            type="number"
+            step="0.01"
+            min="0.01"
+            name="quantity"
+            value={form.quantity}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div style={{ width: 100 }}>
+          <label className="field-label">Unit</label>
+          <input
+            className="input"
+            name="unit"
+            value={form.unit}
+            onChange={handleChange}
+            placeholder="pcs, kg, l..."
+            required
+          />
+        </div>
+        <div>
+          <label className="field-label">Expiry date</label>
+          <input
+            className="input"
+            type="date"
+            name="expiryDate"
+            value={form.expiryDate}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label className="field-label">Category</label>
+          <select
+            className="input"
+            name="categoryId"
+            value={form.categoryId}
+            onChange={handleChange}
+            required
+          >
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
+          {submitting ? "Adding..." : "Add product"}
+        </button>
       </div>
-      <div>
-        <label>Quantity</label>
-        <br />
-        <input
-          type="number"
-          step="0.01"
-          min="0.01"
-          name="quantity"
-          value={form.quantity}
-          onChange={handleChange}
-          required
-          style={{ width: 80 }}
-        />
-      </div>
-      <div>
-        <label>Unit</label>
-        <br />
-        <input
-          name="unit"
-          value={form.unit}
-          onChange={handleChange}
-          placeholder="pcs, kg, l..."
-          required
-          style={{ width: 90 }}
-        />
-      </div>
-      <div>
-        <label>Expiry date</label>
-        <br />
-        <input
-          type="date"
-          name="expiryDate"
-          value={form.expiryDate}
-          onChange={handleChange}
-          required
-        />
-      </div>
-      <div>
-        <label>Category</label>
-        <br />
-        <select name="categoryId" value={form.categoryId} onChange={handleChange} required>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <button type="submit" disabled={submitting}>
-        {submitting ? "Adding..." : "Add product"}
-      </button>
-      {error && <p style={{ color: "red", width: "100%", margin: 0 }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </form>
   );
 }

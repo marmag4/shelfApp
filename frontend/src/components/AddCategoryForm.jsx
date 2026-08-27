@@ -28,23 +28,25 @@ export default function AddCategoryForm({ onCategoryAdded }) {
   };
 
   return (
-    <div style={{ margin: "24px 0", padding: 16, border: "1px solid #ddd", borderRadius: 6 }}>
-      <p>
+    <div className="card">
+      <p style={{ marginTop: 0 }}>
         You don't have any categories yet. Add one to get started (e.g. "Dairy", "Fruits",
         "Vegetables"):
       </p>
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8 }}>
+      <form onSubmit={handleSubmit} className="form-grid">
         <input
+          className="input"
+          style={{ maxWidth: 220 }}
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
           placeholder="Category name"
         />
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
           {submitting ? "Adding..." : "Add category"}
         </button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   );
 }

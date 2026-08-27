@@ -35,45 +35,47 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: 360, margin: "80px auto", fontFamily: "sans-serif" }}>
-      <h1>ShelfApp</h1>
-      <h2>Login</h2>
+    <div className="page-auth">
+      <div className="card">
+        <h1 style={{ marginBottom: 4 }}>🥬 ShelfApp</h1>
+        <p style={{ color: "var(--color-text-muted)", marginTop: 0, marginBottom: 20 }}>
+          Log in to your pantry
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Email</label>
+            <input
+              type="email"
+              className="input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Password</label>
+            <input
+              type="password"
+              className="input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="form-error">{error}</p>}
 
-        <button type="submit" disabled={loading} style={{ width: "100%", padding: 10 }}>
-          {loading ? "Logging in..." : "Log in"}
-        </button>
-      </form>
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: "100%", justifyContent: "center", marginTop: 6 }}>
+            {loading ? "Logging in..." : "Log in"}
+          </button>
+        </form>
 
-      <p style={{ marginTop: 16 }}>
-        No account yet? <Link to="/register">Register</Link>
-      </p>
+        <p style={{ marginTop: 18, marginBottom: 0, fontSize: 14 }}>
+          No account yet? <Link to="/register">Register</Link>
+        </p>
+      </div>
     </div>
   );
 }

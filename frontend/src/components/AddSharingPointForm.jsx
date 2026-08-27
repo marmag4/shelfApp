@@ -37,12 +37,14 @@ export default function AddSharingPointForm({ onSharingPointAdded }) {
   };
 
   return (
-    <div style={{ margin: "16px 0", padding: 16, border: "1px solid #ddd", borderRadius: 6 }}>
-      <p>
+    <div className="card">
+      <p style={{ marginTop: 0 }}>
         No donation points yet — add one to get started (e.g. a local food bank or charity):
       </p>
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      <form onSubmit={handleSubmit} className="form-grid">
         <input
+          className="input"
+          style={{ maxWidth: 200 }}
           name="name"
           value={form.name}
           onChange={handleChange}
@@ -50,6 +52,8 @@ export default function AddSharingPointForm({ onSharingPointAdded }) {
           placeholder="Name"
         />
         <input
+          className="input"
+          style={{ maxWidth: 160 }}
           name="city"
           value={form.city}
           onChange={handleChange}
@@ -57,16 +61,18 @@ export default function AddSharingPointForm({ onSharingPointAdded }) {
           placeholder="City"
         />
         <input
+          className="input"
+          style={{ maxWidth: 160 }}
           name="phone"
           value={form.phone}
           onChange={handleChange}
           placeholder="Phone (optional)"
         />
-        <button type="submit" disabled={submitting}>
+        <button type="submit" className="btn btn-primary" disabled={submitting}>
           {submitting ? "Adding..." : "Add sharing point"}
         </button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </div>
   );
 }

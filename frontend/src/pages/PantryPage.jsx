@@ -64,32 +64,34 @@ export default function PantryPage() {
     setSharingPoints([...sharingPoints, newSharingPoint]);
   };
 
-  if (loading) {
-    return <p style={{ margin: 40, fontFamily: "sans-serif" }}>Loading...</p>;
-  }
-
   return (
-    <div style={{ maxWidth: 900, margin: "40px auto", fontFamily: "sans-serif", padding: "0 16px" }}>
+    <div className="page">
       <NavBar />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
 
-      <NotificationsWidget key={notificationsRefreshKey} />
-      <TipWidget />
-
-      {categories.length === 0 ? (
-        <AddCategoryForm onCategoryAdded={handleCategoryAdded} />
+      {loading ? (
+        <p style={{ color: "var(--color-text-muted)" }}>Loading...</p>
       ) : (
         <>
-          <AddProductForm categories={categories} onProductAdded={handleProductAdded} />
-          {sharingPoints.length === 0 && (
-            <AddSharingPointForm onSharingPointAdded={handleSharingPointAdded} />
+          <NotificationsWidget key={notificationsRefreshKey} />
+          <TipWidget />
+
+          {categories.length === 0 ? (
+            <AddCategoryForm onCategoryAdded={handleCategoryAdded} />
+          ) : (
+            <>
+              <AddProductForm categories={categories} onProductAdded={handleProductAdded} />
+              {sharingPoints.length === 0 && (
+                <AddSharingPointForm onSharingPointAdded={handleSharingPointAdded} />
+              )}
+              <ProductList
+                products={products}
+                onChanged={handleProductChanged}
+                sharingPoints={sharingPoints}
+              />
+            </>
           )}
-          <ProductList
-            products={products}
-            onChanged={handleProductChanged}
-            sharingPoints={sharingPoints}
-          />
         </>
       )}
     </div>

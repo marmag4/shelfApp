@@ -1,16 +1,9 @@
 import { useState } from "react";
 import apiClient from "../api/client";
 
-const STATUS_COLORS = {
-  ACTIVE: "#2563eb",
-  CONSUMED: "#16a34a",
-  WASTED: "#dc2626",
-  DONATED: "#9333ea",
-};
-
 const WASTE_REASONS = ["EXPIRED", "SPOILED", "OVERBOUGHT", "OTHER"];
 
-/** One row per product, with the "Consumed" / "Wasted" actions for active items. */
+/** One row per product, with the "Consumed" / "Wasted" / "Donate" actions for active items. */
 function ProductRow({ product, onChanged, sharingPoints }) {
   const [showWasteForm, setShowWasteForm] = useState(false);
   const [reason, setReason] = useState(WASTE_REASONS[0]);
@@ -80,116 +73,130 @@ function ProductRow({ product, onChanged, sharingPoints }) {
 
   return (
     <>
-    <tr style={{ borderBottom: "1px solid #eee" }}>
-      <td style={{ padding: "8px 4px" }}>{product.name}</td>
-      <td style={{ padding: "8px 4px" }}>
-        {product.quantity} {product.unit}
-      </td>
-      <td style={{ padding: "8px 4px" }}>{product.categoryName}</td>
-      <td style={{ padding: "8px 4px" }}>{product.expiryDate}</td>
-      <td style={{ padding: "8px 4px", color: STATUS_COLORS[product.status], fontWeight: "bold" }}>
-        {product.status}
-      </td>
-      <td style={{ padding: "8px 4px" }}>
-        {product.status === "ACTIVE" && !showWasteForm && !showDonateForm && (
-          <>
-            <button onClick={markConsumed} disabled={busy}>
-              Consumed
-            </button>{" "}
-            <button onClick={() => setShowWasteForm(true)} disabled={busy}>
-              Wasted
-            </button>{" "}
-            {sharingPoints.length > 0 && (
-              <button onClick={() => setShowDonateForm(true)} disabled={busy}>
-                Donate
-              </button>
-            )}
-          </>
-        )}
-        {showWasteForm && (
-          <>
-            <select value={reason} onChange={(e) => setReason(e.target.value)}>
-              {WASTE_REASONS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>{" "}
-            <button onClick={confirmWaste} disabled={busy}>
-              Confirm
-            </button>{" "}
-            <button onClick={() => setShowWasteForm(false)} disabled={busy}>
-              Cancel
-            </button>
-          </>
-        )}
-        {showDonateForm && (
-          <>
-            <select value={sharingPointId} onChange={(e) => setSharingPointId(e.target.value)}>
-              {sharingPoints.map((sp) => (
-                <option key={sp.id} value={sp.id}>
-                  {sp.name} ({sp.city})
-                </option>
-              ))}
-            </select>{" "}
-            <button onClick={confirmDonate} disabled={busy}>
-              Confirm
-            </button>{" "}
-            <button onClick={() => setShowDonateForm(false)} disabled={busy}>
-              Cancel
-            </button>
-          </>
-        )}{" "}
-        <button onClick={toggleRecipes}>{showRecipes ? "Hide recipes" : "Recipes"}</button>
-      </td>
-    </tr>
-    {showRecipes && (
       <tr>
-        <td colSpan={6} style={{ padding: "8px 4px 16px", background: "#fafafa" }}>
-          {recipesLoading && <p>Loading recipes...</p>}
-          {!recipesLoading && recipes && recipes.length === 0 && (
-            <p>No recipe suggestions for this category yet.</p>
-          )}
-          {!recipesLoading &&
-            recipes &&
-            recipes.map((recipe) => (
-              <div key={recipe.title} style={{ marginBottom: 12 }}>
-                <strong>{recipe.title}</strong> — {recipe.description}
-                <br />
-                <em>Ingredients:</em> {recipe.ingredients.join(", ")}
-                <br />
-                <em>Instructions:</em> {recipe.instructions}
-              </div>
-            ))}
+        <td>{product.name}</td>
+        <td>
+          {product.quantity} {product.unit}
+        </td>
+        <td>{product.categoryName}</td>
+        <td>{product.expiryDate}</td>
+        <td>
+          <span className={`badge badge-${product.status.toLowerCase()}`}>{product.status}</span>
+        </td>
+        <td>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+            {product.status === "ACTIVE" && !showWasteForm && !showDonateForm && (
+              <>
+                <button className="btn btn-sm btn-primary" onClick={markConsumed} disabled={busy}>
+                  Consumed
+                </button>
+                <button className="btn btn-sm btn-danger" onClick={() => setShowWasteForm(true)} disabled={busy}>
+                  Wasted
+                </button>
+                {sharingPoints.length > 0 && (
+                  <button className="btn btn-sm" onClick={() => setShowDonateForm(true)} disabled={busy}>
+                    Donate
+                  </button>
+                )}
+              </>
+            )}
+            {showWasteForm && (
+              <>
+                <select className="input" style={{ width: 130 }} value={reason} onChange={(e) => setReason(e.target.value)}>
+                  {WASTE_REASONS.map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+                <button className="btn btn-sm btn-danger" onClick={confirmWaste} disabled={busy}>
+                  Confirm
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setShowWasteForm(false)} disabled={busy}>
+                  Cancel
+                </button>
+              </>
+            )}
+            {showDonateForm && (
+              <>
+                <select
+                  className="input"
+                  style={{ width: 180 }}
+                  value={sharingPointId}
+                  onChange={(e) => setSharingPointId(e.target.value)}
+                >
+                  {sharingPoints.map((sp) => (
+                    <option key={sp.id} value={sp.id}>
+                      {sp.name} ({sp.city})
+                    </option>
+                  ))}
+                </select>
+                <button className="btn btn-sm btn-primary" onClick={confirmDonate} disabled={busy}>
+                  Confirm
+                </button>
+                <button className="btn btn-sm btn-ghost" onClick={() => setShowDonateForm(false)} disabled={busy}>
+                  Cancel
+                </button>
+              </>
+            )}
+            <button className="btn btn-sm btn-ghost" onClick={toggleRecipes}>
+              {showRecipes ? "Hide recipes" : "🍳 Recipes"}
+            </button>
+          </div>
         </td>
       </tr>
-    )}
+      {showRecipes && (
+        <tr>
+          <td colSpan={6} style={{ padding: "0 10px 16px", border: "none" }}>
+            <div className="recipe-panel">
+              {recipesLoading && <p style={{ margin: 0 }}>Loading recipes...</p>}
+              {!recipesLoading && recipes && recipes.length === 0 && (
+                <p style={{ margin: 0 }}>No recipe suggestions for this category yet.</p>
+              )}
+              {!recipesLoading &&
+                recipes &&
+                recipes.map((recipe) => (
+                  <div key={recipe.title} className="recipe-item">
+                    <strong>{recipe.title}</strong> — {recipe.description}
+                    <br />
+                    <em>Ingredients:</em> {recipe.ingredients.join(", ")}
+                    <br />
+                    <em>Instructions:</em> {recipe.instructions}
+                  </div>
+                ))}
+            </div>
+          </td>
+        </tr>
+      )}
     </>
   );
 }
 
 export default function ProductList({ products, onChanged, sharingPoints }) {
-  if (products.length === 0) {
-    return <p>No products yet — add your first one above.</p>;
-  }
-
   return (
-    <table style={{ width: "100%", borderCollapse: "collapse" }}>
-      <thead>
-        <tr style={{ textAlign: "left", borderBottom: "2px solid #ccc" }}>
-          <th style={{ padding: "8px 4px" }}>Name</th>
-          <th style={{ padding: "8px 4px" }}>Quantity</th>
-          <th style={{ padding: "8px 4px" }}>Category</th>
-          <th style={{ padding: "8px 4px" }}>Expires</th>
-          <th style={{ padding: "8px 4px" }}>Status</th>
-          <th style={{ padding: "8px 4px" }}>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {products.map((p) => (
-          <ProductRow key={p.id} product={p} onChanged={onChanged} sharingPoints={sharingPoints} />
-        ))}
-      </tbody>
-    </table>
+    <div className="card">
+      <p className="card-title">Your pantry</p>
+      {products.length === 0 ? (
+        <p className="table-empty">No products yet — add your first one above.</p>
+      ) : (
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Category</th>
+              <th>Expires</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((p) => (
+              <ProductRow key={p.id} product={p} onChanged={onChanged} sharingPoints={sharingPoints} />
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
   );
 }

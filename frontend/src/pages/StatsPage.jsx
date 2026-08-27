@@ -20,23 +20,16 @@ export default function StatsPage() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 900, margin: "40px auto", fontFamily: "sans-serif", padding: "0 16px" }}>
+    <div className="page">
       <NavBar />
 
-      <h2>Your statistics</h2>
+      <h2 style={{ marginBottom: 16 }}>Your statistics</h2>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p style={{ color: "var(--color-text-muted)" }}>Loading...</p>}
 
       {!loading && stats && (
         <>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: 12,
-              margin: "16px 0",
-            }}
-          >
+          <div className="stat-grid">
             <StatTile label="Total products" value={stats.totalProducts} />
             <StatTile label="Active" value={stats.activeProducts} />
             <StatTile label="Consumed" value={stats.consumedProducts} />
@@ -46,21 +39,14 @@ export default function StatsPage() {
             <StatTile label="Total waste logs" value={stats.totalWasteLogs} />
           </div>
 
-          <div style={{ border: "1px solid #ddd", borderRadius: 6, padding: 16 }}>
-            <p style={{ margin: "0 0 8px" }}>
+          <div className="card">
+            <p style={{ margin: "0 0 4px" }}>
               <strong>Waste rate:</strong> {stats.wastePercentage}% of the products you've
               finished with ended up wasted (the rest were consumed or donated).
             </p>
-            {/* A simple visual bar - a fuller chart can replace this in the
-                visual design pass, once every screen exists. */}
-            <div style={{ background: "#eee", borderRadius: 4, height: 20, overflow: "hidden" }}>
-              <div
-                style={{
-                  width: `${Math.min(stats.wastePercentage, 100)}%`,
-                  background: "#dc2626",
-                  height: "100%",
-                }}
-              />
+            {/* A simple visual bar - a fuller chart library can replace this later. */}
+            <div className="progress-track">
+              <div className="progress-fill" style={{ width: `${Math.min(stats.wastePercentage, 100)}%` }} />
             </div>
           </div>
         </>
@@ -71,9 +57,9 @@ export default function StatsPage() {
 
 function StatTile({ label, value }) {
   return (
-    <div style={{ border: "1px solid #ddd", borderRadius: 6, padding: 12, textAlign: "center" }}>
-      <div style={{ fontSize: 24, fontWeight: "bold" }}>{value}</div>
-      <div style={{ fontSize: 13, color: "#666" }}>{label}</div>
+    <div className="stat-tile">
+      <div className="stat-tile-value">{value}</div>
+      <div className="stat-tile-label">{label}</div>
     </div>
   );
 }

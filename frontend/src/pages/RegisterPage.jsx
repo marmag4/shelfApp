@@ -49,71 +49,76 @@ export default function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: 360, margin: "60px auto", fontFamily: "sans-serif" }}>
-      <h1>ShelfApp</h1>
-      <h2>Create an account</h2>
+    <div className="page-auth">
+      <div className="card">
+        <h1 style={{ marginBottom: 4 }}>🥬 ShelfApp</h1>
+        <p style={{ color: "var(--color-text-muted)", marginTop: 0, marginBottom: 20 }}>
+          Create an account
+        </p>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 12 }}>
-          <label>First name</label>
-          <br />
-          <input
-            name="firstName"
-            value={form.firstName}
-            onChange={handleChange}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+        <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">First name</label>
+            <input
+              name="firstName"
+              className="input"
+              value={form.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label>Last name</label>
-          <br />
-          <input
-            name="lastName"
-            value={form.lastName}
-            onChange={handleChange}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Last name</label>
+            <input
+              name="lastName"
+              className="input"
+              value={form.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="input"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            required
-            style={{ width: "100%", padding: 8 }}
-          />
-        </div>
+          <div style={{ marginBottom: 14 }}>
+            <label className="field-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              className="input"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className="form-error">{error}</p>}
 
-        <button type="submit" disabled={loading} style={{ width: "100%", padding: 10 }}>
-          {loading ? "Creating account..." : "Register"}
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: "100%", justifyContent: "center", marginTop: 6 }}
+          >
+            {loading ? "Creating account..." : "Register"}
+          </button>
+        </form>
 
-      <p style={{ marginTop: 16 }}>
-        Already have an account? <Link to="/login">Log in</Link>
-      </p>
+        <p style={{ marginTop: 18, marginBottom: 0, fontSize: 14 }}>
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      </div>
     </div>
   );
 }

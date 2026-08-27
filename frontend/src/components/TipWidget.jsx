@@ -24,28 +24,18 @@ export default function TipWidget() {
   }, []);
 
   return (
-    <div
-      style={{
-        margin: "16px 0",
-        padding: 16,
-        border: "1px solid #ddd",
-        borderRadius: 6,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 12,
-      }}
-    >
+    <div className="card tip-box">
       {loading || !tip ? (
         <span>Loading a tip...</span>
       ) : (
         <span>
+          💡{" "}
           {/* General tips (no specific product category) come back with category: null - just show the message then. */}
           {tip.category && <strong>{tip.category}: </strong>}
           {tip.message}
         </span>
       )}
-      <button onClick={fetchTip} disabled={loading}>
+      <button className="btn btn-sm" onClick={fetchTip} disabled={loading}>
         New tip
       </button>
     </div>

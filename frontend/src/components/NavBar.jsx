@@ -1,20 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 /** Simple top navigation, shared by every logged-in page. */
 export default function NavBar() {
   const { logout } = useAuth();
+  const location = useLocation();
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-      <div>
-        <h1 style={{ display: "inline", marginRight: 24 }}>ShelfApp</h1>
-        <Link to="/" style={{ marginRight: 12 }}>
-          Pantry
-        </Link>
-        <Link to="/stats">Statistics</Link>
+    <div className="navbar">
+      <div className="navbar-brand">
+        <h1>🥬 ShelfApp</h1>
+        <div className="navbar-links">
+          <Link to="/" className={`navbar-link ${location.pathname === "/" ? "active" : ""}`}>
+            Pantry
+          </Link>
+          <Link
+            to="/stats"
+            className={`navbar-link ${location.pathname === "/stats" ? "active" : ""}`}
+          >
+            Statistics
+          </Link>
+          <Link
+            to="/profile"
+            className={`navbar-link ${location.pathname === "/profile" ? "active" : ""}`}
+          >
+            Profile
+          </Link>
+        </div>
       </div>
-      <button onClick={logout}>Log out</button>
+      <button className="btn btn-ghost" onClick={logout}>
+        Log out
+      </button>
     </div>
   );
 }
