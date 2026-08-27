@@ -3,6 +3,7 @@ package gr.aueb.shelfapp.controller;
 import gr.aueb.shelfapp.dto.CreateProductRequest;
 import gr.aueb.shelfapp.dto.ProductDto;
 import gr.aueb.shelfapp.dto.UpdateProductStatusRequest;
+import gr.aueb.shelfapp.security.CurrentUserProvider;
 import gr.aueb.shelfapp.service.ProductService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -13,43 +14,47 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * NOTE: for now we pass userId explicitly (as a request field / query param)
- * since we haven't wired up login yet. Once auth exists, this will read the
- * current user from the security context instead - see the roadmap.
+ * Every endpoint here works on "my" products - the current user is read
+ * from the JWT (via CurrentUserProvider), never trusted from the client.
+ * Also: a product can only be viewed/changed by the user who owns it
+ * (see ProductService.getOwnedOrThrow) - that's the "authorization" half,
+ * on top of "authentication".
  */
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
+    private final CurrentUserProvider currentUserProvider;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, CurrentUserProvider currentUserProvider) {
         this.productService = productService;
+        this.currentUserProvider = currentUserProvider;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDto create(@Valid @RequestBody CreateProductRequest request) {
-        return productService.create(request);
+        return productService.create(request, currentUserProvider.getCurrentUserId());
     }
 
+    /** Lists only the logged-in user's own products. */
     @GetMapping
-    public List<ProductDto> getByUser(@RequestParam Long userId) {
-        return productService.findByUser(userId);
+    public List<ProductDto> getMine() {
+        return productService.findByUser(currentUserProvider.getCurrentUserId());
     }
 
     @GetMapping("/{id}")
     public ProductDto getById(@PathVariable Long id) {
-        return productService.findById(id);
+        return productService.findById(id, currentUserProvider.getCurrentUserId());
     }
 
     @PatchMapping("/{id}/status")
     public ProductDto updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateProductStatusRequest request) {
-        return productService.updateStatus(id, request.status());
+        return productService.updateStatus(id, request.status(), currentUserProvider.getCurrentUserId());
     }
 }

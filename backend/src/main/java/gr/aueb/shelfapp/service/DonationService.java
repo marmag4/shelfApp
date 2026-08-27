@@ -36,9 +36,14 @@ public class DonationService {
     }
 
     @Transactional
-    public DonationDto create(CreateDonationRequest request) {
+    public DonationDto create(CreateDonationRequest request, Long currentUserId) {
         Product product = productRepository.findById(request.productId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        if (!product.getUser().getId().equals(currentUserId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This product does not belong to you");
+        }
+
         SharingPoint sharingPoint = sharingPointRepository.findById(request.sharingPointId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sharing point not found"));
 

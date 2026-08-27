@@ -29,10 +29,10 @@ public class ProductService {
         this.userRepository = userRepository;
     }
 
-    public ProductDto create(CreateProductRequest request) {
+    public ProductDto create(CreateProductRequest request, Long userId) {
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category not found"));
-        User user = userRepository.findById(request.userId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         Product product = new Product(
@@ -47,12 +47,12 @@ public class ProductService {
                 .toList();
     }
 
-    public ProductDto findById(Long id) {
-        return toDto(getOrThrow(id));
+    public ProductDto findById(Long id, Long currentUserId) {
+        return toDto(getOwnedOrThrow(id, currentUserId));
     }
 
-    public ProductDto updateStatus(Long id, String newStatus) {
-        Product product = getOrThrow(id);
+    public ProductDto updateStatus(Long id, String newStatus, Long currentUserId) {
+        Product product = getOwnedOrThrow(id, currentUserId);
 
         ProductStatus status;
         try {
@@ -66,9 +66,16 @@ public class ProductService {
         return toDto(productRepository.save(product));
     }
 
-    private Product getOrThrow(Long id) {
-        return productRepository.findById(id)
+    /** Loads the product and makes sure it actually belongs to the logged-in user. */
+    private Product getOwnedOrThrow(Long id, Long currentUserId) {
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        if (!product.getUser().getId().equals(currentUserId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "This product does not belong to you");
+        }
+
+        return product;
     }
 
     private ProductDto toDto(Product p) {
