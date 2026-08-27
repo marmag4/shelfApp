@@ -11,6 +11,12 @@ export default function NavBar() {
       <div className="navbar-brand">
         <h1>🥬 ShelfApp</h1>
         <div className="navbar-links">
+          <Link
+            to="/profile"
+            className={`navbar-link ${location.pathname === "/profile" ? "active" : ""}`}
+          >
+            Profile
+          </Link>
           <Link to="/" className={`navbar-link ${location.pathname === "/" ? "active" : ""}`}>
             Pantry
           </Link>
@@ -19,12 +25,6 @@ export default function NavBar() {
             className={`navbar-link ${location.pathname === "/stats" ? "active" : ""}`}
           >
             Statistics
-          </Link>
-          <Link
-            to="/profile"
-            className={`navbar-link ${location.pathname === "/profile" ? "active" : ""}`}
-          >
-            Profile
           </Link>
         </div>
       </div>
