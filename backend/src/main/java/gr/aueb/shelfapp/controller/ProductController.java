@@ -2,9 +2,11 @@ package gr.aueb.shelfapp.controller;
 
 import gr.aueb.shelfapp.dto.CreateProductRequest;
 import gr.aueb.shelfapp.dto.ProductDto;
+import gr.aueb.shelfapp.dto.RecipeDto;
 import gr.aueb.shelfapp.dto.UpdateProductStatusRequest;
 import gr.aueb.shelfapp.security.CurrentUserProvider;
 import gr.aueb.shelfapp.service.ProductService;
+import gr.aueb.shelfapp.service.RecipeService;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -29,10 +31,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private final ProductService productService;
+    private final RecipeService recipeService;
     private final CurrentUserProvider currentUserProvider;
 
-    public ProductController(ProductService productService, CurrentUserProvider currentUserProvider) {
+    public ProductController(ProductService productService, RecipeService recipeService,
+                              CurrentUserProvider currentUserProvider) {
         this.productService = productService;
+        this.recipeService = recipeService;
         this.currentUserProvider = currentUserProvider;
     }
 
@@ -56,5 +61,12 @@ public class ProductController {
     @PatchMapping("/{id}/status")
     public ProductDto updateStatus(@PathVariable Long id, @Valid @RequestBody UpdateProductStatusRequest request) {
         return productService.updateStatus(id, request.status(), currentUserProvider.getCurrentUserId());
+    }
+
+    /** Feature #2: recipe ideas for this product's category, so it gets used before it expires. */
+    @GetMapping("/{id}/recipes")
+    public List<RecipeDto> getRecipesFor(@PathVariable Long id) {
+        ProductDto product = productService.findById(id, currentUserProvider.getCurrentUserId());
+        return recipeService.forCategory(product.categoryName());
     }
 }
