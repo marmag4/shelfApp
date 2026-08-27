@@ -62,11 +62,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /** Allows the future React app (localhost:3000) to call this API from the browser. */
+    /** Allows the React app (Vite's dev server) to call this API from the browser. */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
