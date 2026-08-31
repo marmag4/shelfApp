@@ -2,6 +2,7 @@ import { useState } from "react";
 import apiClient from "../api/client";
 
 const WASTE_REASONS = ["EXPIRED", "SPOILED", "OVERBOUGHT", "OTHER"];
+const ALL_STATUSES = ["ACTIVE", "CONSUMED", "DONATED", "WASTED"];
 
 /** One row per product, with the "Consumed" / "Wasted" / "Donate" actions for active items. */
 function ProductRow({ product, onChanged, sharingPoints, categories }) {
@@ -16,6 +17,8 @@ function ProductRow({ product, onChanged, sharingPoints, categories }) {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editForm, setEditForm] = useState(null);
   const [editError, setEditError] = useState(null);
+  const [showStatusForm, setShowStatusForm] = useState(false);
+  const [newStatus, setNewStatus] = useState(product.status);
 
   const markConsumed = async () => {
     setBusy(true);
@@ -95,6 +98,31 @@ function ProductRow({ product, onChanged, sharingPoints, categories }) {
       setEditError(
         fields ? Object.values(fields).join(" ") : err.response?.data?.error || "Could not update product.",
       );
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  // Lets you set the status to anything directly - unlike Consumed/Wasted/
+  // Donate (which only show up while ACTIVE, and Wasted/Donate also create
+  // a WasteLog/Donation record), this is always available and just changes
+  // the status itself, e.g. to fix a mistake or move a product back to
+  // ACTIVE.
+  const toggleStatusForm = () => {
+    if (!showStatusForm) {
+      setNewStatus(product.status);
+    }
+    setShowStatusForm(!showStatusForm);
+  };
+
+  const confirmStatusChange = async () => {
+    setBusy(true);
+    try {
+      const response = await apiClient.patch(`/products/${product.id}/status`, {
+        status: newStatus,
+      });
+      onChanged(response.data);
+      setShowStatusForm(false);
     } finally {
       setBusy(false);
     }
@@ -191,6 +219,33 @@ function ProductRow({ product, onChanged, sharingPoints, categories }) {
             <button className="btn btn-sm btn-ghost" onClick={toggleEdit} disabled={busy}>
               {showEditForm ? "Cancel edit" : "✏️ Edit"}
             </button>
+            {product.status !== "ACTIVE" &&
+              (showStatusForm ? (
+                <>
+                  <select
+                    className="input"
+                    style={{ width: 130 }}
+                    value={newStatus}
+                    onChange={(e) => setNewStatus(e.target.value)}
+                  >
+                    {ALL_STATUSES.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                  <button className="btn btn-sm btn-primary" onClick={confirmStatusChange} disabled={busy}>
+                    Confirm
+                  </button>
+                  <button className="btn btn-sm btn-ghost" onClick={toggleStatusForm} disabled={busy}>
+                    Cancel
+                  </button>
+                </>
+              ) : (
+                <button className="btn btn-sm btn-ghost" onClick={toggleStatusForm} disabled={busy}>
+                  🔄 Change status
+                </button>
+              ))}
           </div>
         </td>
       </tr>

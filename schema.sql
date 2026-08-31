@@ -1,16 +1,10 @@
 -- ShelfApp database schema
--- Run once against the shelfapp database to create all tables.
-
--- Categories: a small shared lookup list (Dairy, Fruits, Vegetables, ...)
+-- Categories
 CREATE TABLE categories (
     id   BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Seeded with a broad, generic set covering what a household fridge/pantry
--- usually holds - so a brand new install doesn't start with an empty
--- dropdown. Users can still add their own categories any time from the
--- "+ Add category" button on the Pantry screen.
 INSERT INTO categories (name) VALUES
     ('Dairy'),
     ('Fruits'),
@@ -30,7 +24,7 @@ INSERT INTO categories (name) VALUES
     ('Leftovers')
 ON CONFLICT (name) DO NOTHING;
 
--- Users: one account per person using the app
+-- Users
 CREATE TABLE users (
     id            BIGSERIAL PRIMARY KEY,
     email         VARCHAR(255) NOT NULL UNIQUE,
@@ -45,7 +39,7 @@ CREATE TABLE users (
     created_at    TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- Products: what a user has in their fridge / pantry
+-- Products
 CREATE TABLE products (
     id          BIGSERIAL PRIMARY KEY,
     name        VARCHAR(150) NOT NULL,
@@ -59,7 +53,7 @@ CREATE TABLE products (
     created_at  TIMESTAMP NOT NULL DEFAULT now()
 );
 
--- SharingPoints: places that accept food donations
+-- SharingPoints
 CREATE TABLE sharing_points (
     id            BIGSERIAL PRIMARY KEY,
     name          VARCHAR(150) NOT NULL,
@@ -70,11 +64,7 @@ CREATE TABLE sharing_points (
     phone         VARCHAR(30)
 );
 
--- Donations: a product given away to a sharing point
--- ON DELETE CASCADE on product_id: deleting a user cascades to their
--- products (see products.user_id below), which must in turn cascade here,
--- otherwise Postgres would refuse to delete a product that still has a
--- donation record pointing at it.
+-- Donations
 CREATE TABLE donations (
     id               BIGSERIAL PRIMARY KEY,
     product_id       BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
@@ -84,8 +74,7 @@ CREATE TABLE donations (
                      CHECK (status IN ('PENDING','COMPLETED','CANCELLED'))
 );
 
--- WasteLog: a product that ended up thrown away
--- Same reasoning as donations.product_id above.
+-- WasteLog
 CREATE TABLE waste_logs (
     id         BIGSERIAL PRIMARY KEY,
     product_id BIGINT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
