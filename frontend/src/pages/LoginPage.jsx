@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import FridgeIcon from "../components/icons/FridgeIcon";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -37,7 +38,14 @@ export default function LoginPage() {
   return (
     <div className="page-auth">
       <div className="card">
-        <h1 style={{ marginBottom: 4 }}>🥬 ShelfApp</h1>
+        <h1 className="brand-title" style={{ marginBottom: 4 }}>
+          <span className="brand-icon-badge">
+            <FridgeIcon size={19} />
+          </span>
+          <span className="brand-name">
+            Shelf<span className="brand-accent">App</span>
+          </span>
+        </h1>
         <p style={{ color: "var(--color-text-muted)", marginTop: 0, marginBottom: 20 }}>
           Log in to your pantry
         </p>

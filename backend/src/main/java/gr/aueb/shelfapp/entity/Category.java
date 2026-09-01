@@ -8,8 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * A shared lookup category for products (e.g. Dairy, Fruits, Vegetables).
- * Maps to the "categories" table we already created in schema.sql.
+ * A shared lookup category for products.
  */
 @Entity
 @Table(name = "categories")

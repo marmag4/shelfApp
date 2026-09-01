@@ -1,5 +1,6 @@
 package gr.aueb.shelfapp.dto;
 
-/** What we send back to the client. Never expose the @Entity directly. */
+/** The message back to the client
+ */
 public record CategoryDto(Long id, String name) {
 }

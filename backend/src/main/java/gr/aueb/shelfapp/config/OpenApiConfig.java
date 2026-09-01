@@ -7,9 +7,9 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Adds the "Authorize" button (padlock icon) to the Swagger UI page, so we
+ * Adds the "Authorize" button to the Swagger UI page, so we
  * can paste in a JWT once and have Swagger send it on every request after
- * that - instead of typing "Bearer ..." into every single endpoint by hand.
+ * that.
  */
 @Configuration
 @OpenAPIDefinition(security = @SecurityRequirement(name = "bearerAuth"))

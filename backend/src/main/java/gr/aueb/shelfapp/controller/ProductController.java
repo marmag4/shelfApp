@@ -21,11 +21,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Every endpoint here works on "my" products - the current user is read
- * from the JWT (via CurrentUserProvider), never trusted from the client.
- * Also: a product can only be viewed/changed by the user who owns it
- * (see ProductService.getOwnedOrThrow) - that's the "authorization" half,
- * on top of "authentication".
+ * Every endpoint here works on "my" products.
+ * A product can only be viewed/changed by the user who owns it.
  */
 @RestController
 @RequestMapping("/api/products")

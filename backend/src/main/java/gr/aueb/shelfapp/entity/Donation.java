@@ -13,7 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-/** A product given away to a sharing point. Maps to "donations". */
+/** A product given away to a sharing point.
+  */
 @Entity
 @Table(name = "donations")
 public class Donation {

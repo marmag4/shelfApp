@@ -25,11 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Tests for the one piece of logic in the whole app where "two things must
- * happen together" - recording a WasteLog and flipping the product's status
- * to WASTED, in the same transaction. Product/User/the repositories are all
- * mocked (no real database involved), so these run in milliseconds and check
- * only the logic in WasteLogService itself.
+ * Tests for the logic in the whole app where "two things must
+ * happen together".
  */
 @ExtendWith(MockitoExtension.class)
 class WasteLogServiceTest {

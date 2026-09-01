@@ -15,7 +15,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/** Something a user has in their fridge/pantry. Maps to the "products" table. */
+/** Something a user has in their fridge/pantry.
+  */
 @Entity
 @Table(name = "products")
 public class Product {

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Feature #3: a short motivational tip, optionally tailored to a category
- * (e.g. "Dairy") - a little encouragement to actually use up the pantry.
+ * Short motivational tip, optionally tailored to a category
+ * Here, later we can add more tips, even manualy.
  */
 @RestController
 @RequestMapping("/api/tips")

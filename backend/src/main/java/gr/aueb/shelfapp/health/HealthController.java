@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Just a way to prove the backend started and can talk back.
- * We'll delete this once we have real endpoints (pantry items, etc.).
  */
 @RestController
 public class HealthController {

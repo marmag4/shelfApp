@@ -341,7 +341,7 @@ function ProductRow({ product, onChanged, sharingPoints, categories }) {
 export default function ProductList({ products, onChanged, sharingPoints, categories }) {
   return (
     <div className="card">
-      <p className="card-title">Your pantry</p>
+      <p className="card-title">Pantry items</p>
       {products.length === 0 ? (
         <p className="table-empty">No products yet — add your first one above.</p>
       ) : (

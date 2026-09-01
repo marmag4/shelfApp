@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
- * Creates and reads the JWT tokens. A JWT is just a signed piece of text
- * that says "this is user X, and this token is valid until date Y". The
- * server doesn't need to remember anything about it (no session storage) -
- * it just re-checks the signature and the expiry date every time.
+ * Creates and reads the JWT tokens.
  */
 @Component
 public class JwtService {

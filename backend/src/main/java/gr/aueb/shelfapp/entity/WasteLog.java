@@ -13,7 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
-/** A record of a product that ended up thrown away. Maps to "waste_logs". */
+/** A record of a product that ended up thrown away.
+ */
 @Entity
 @Table(name = "waste_logs")
 public class WasteLog {

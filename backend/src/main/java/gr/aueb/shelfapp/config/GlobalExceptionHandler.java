@@ -12,15 +12,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Catches exceptions thrown anywhere in the app and turns them into one
- * consistent JSON error shape - instead of validation failures, "not
- * found" errors, and real bugs each looking completely different (and,
- * for a real bug, instead of leaking a raw Java stack trace to the client).
+ * Catches exceptions in the app and turns them into one
+ * consistent JSON error shape.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /** Bean Validation failures - @NotBlank, @Email, etc. on a request DTO. */
+    /** Bean Validation failures
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new LinkedHashMap<>();
@@ -37,7 +36,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    /** Anything a service deliberately threw - 404 not found, 409 conflict, 403 forbidden, etc. */
+    /** Anything a service deliberately threw
+     */
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, Object>> handleResponseStatus(ResponseStatusException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
@@ -48,7 +48,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getStatusCode()).body(body);
     }
 
-    /** Anything else - an actual bug. Never leak the stack trace to the client. */
+    /** Anything else
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleUnexpected(Exception ex) {
         Map<String, Object> body = new LinkedHashMap<>();

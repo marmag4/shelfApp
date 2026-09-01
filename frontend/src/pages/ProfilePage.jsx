@@ -100,7 +100,8 @@ export default function ProfilePage() {
     <div className="page">
       <NavBar />
 
-      <h2 style={{ marginBottom: 16 }}>Your profile</h2>
+      <h2>Your profile</h2>
+      <p className="page-subtitle">Manage your account details.</p>
 
       {loading && <p style={{ color: "var(--color-text-muted)" }}>Loading...</p>}
       {error && <p className="form-error">{error}</p>}

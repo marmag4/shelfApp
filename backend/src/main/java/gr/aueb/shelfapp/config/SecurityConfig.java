@@ -15,20 +15,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * This is where we decide, URL by URL, who is allowed to call what:
- *  - registering a new user and logging in must stay open (no token yet!)
- *  - Swagger's own pages must stay open, so we can still read the docs
- *  - everything else requires a valid JWT from now on
- *
- * "Stateless" means the server keeps no memory of who is logged in between
- * requests - every request must carry its own proof (the JWT) each time.
- *
- * Note: we deliberately do NOT use Spring Security's own login machinery
- * (AuthenticationManager / DaoAuthenticationProvider). AuthService checks
- * the password itself with PasswordEncoder.matches(...) and issues the JWT
- * directly - simpler to follow for this project. Spring Security's job here
- * is just to (a) read the JWT on every request via JwtAuthFilter, and
- * (b) block URLs that require one.
+ * Here we dicede who is allowed to call what:
+ *  registering a new user and logging in must stay open,
+ *  Swagger's own pages must stay open, so we can still read the docs,
+ *  everything else requires a valid JWT.
  */
 @Configuration
 @EnableWebSecurity

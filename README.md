@@ -4,11 +4,11 @@ A household pantry tracker — Coding Factory 10 (AUEB) final project.
 
 Log the food in your kitchen and ShelfApp helps you avoid wasting it:
 
-- Warns you before a product expires
+- Warns you before a product expires - and automatically marks it wasted (reason: EXPIRED) if it passes its expiry date untouched
 - Suggests a recipe so it gets used
 - Shows a motivational tip
 - Lets you donate a product instead of wasting it
-- Tracks your habits over time, as numbers and charts
+- Tracks your habits over time, as numbers and charts (a 6-month waste-vs-donations trend and a status breakdown)
 
 You can also edit a product's details, manage your account (edit or delete it), and add your own
 pantry categories any time.
@@ -67,6 +67,8 @@ Unit tests cover the service layer's key logic (mocked, no database needed):
 - `WasteLogServiceTest`
 - `DonationServiceTest`
 - `NotificationServiceTest`
+- `StatsServiceTest`
+- `ExpiryAutoWasteServiceTest`
 
 Run with `mvn test` from `backend`, or from IntelliJ.
 

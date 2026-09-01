@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * The Controller layer: only handles HTTP in/out.
- * All real work is delegated to CategoryService.
  */
 @RestController
 @RequestMapping("/api/categories")

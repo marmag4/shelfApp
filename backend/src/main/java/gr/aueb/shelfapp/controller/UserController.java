@@ -28,7 +28,9 @@ public class UserController {
         this.currentUserProvider = currentUserProvider;
     }
 
-    /** Public - no token yet, this is how you get one (via /api/auth/login afterwards). */
+    /** Public - no token yet.
+     *  We will get one - via /api/auth/login afterwards.
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto register(@Valid @RequestBody RegisterUserRequest request) {
@@ -36,8 +38,7 @@ public class UserController {
     }
 
     /**
-     * Returns MY OWN profile - deliberately "/me" instead of "/{id}", so
-     * there's no id to swap out and peek at someone else's data with.
+     * Returns MY OWN profile, so there's no id to swap out and peek at someone else's data with.
      */
     @GetMapping("/me")
     public UserDto getCurrentUser() {

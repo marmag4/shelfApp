@@ -2,7 +2,8 @@ package gr.aueb.shelfapp.dto;
 
 import java.time.LocalDate;
 
-/** What we send back to the client. Notice: no password field, ever. */
+/** What we send back to the client.
+ */
 public record UserDto(
         Long id,
         String email,

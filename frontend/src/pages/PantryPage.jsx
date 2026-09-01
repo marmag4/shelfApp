@@ -73,6 +73,9 @@ export default function PantryPage() {
     <div className="page">
       <NavBar />
 
+      <h2>Your pantry</h2>
+      <p className="page-subtitle">What's in stock, what's about to expire, and what to do next.</p>
+
       {error && <p className="form-error">{error}</p>}
 
       {loading ? (

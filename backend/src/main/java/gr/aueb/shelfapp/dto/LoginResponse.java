@@ -1,6 +1,7 @@
 package gr.aueb.shelfapp.dto;
 
-/** What we send back after a successful login: the token, plus a few basics. */
+/** What we send back after a successful login
+  */
 public record LoginResponse(
         String token,
         Long userId,

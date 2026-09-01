@@ -32,7 +32,8 @@ public class DonationController {
         return donationService.create(request, currentUserProvider.getCurrentUserId());
     }
 
-    /** Lists only the logged-in user's own donations. */
+    /** Lists only the logged-in user's own donations.
+     */
     @GetMapping
     public List<DonationDto> getMine() {
         return donationService.findByUser(currentUserProvider.getCurrentUserId());

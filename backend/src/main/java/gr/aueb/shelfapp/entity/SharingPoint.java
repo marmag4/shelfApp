@@ -7,7 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-/** A place that accepts food donations. Maps to "sharing_points". */
+/** A place that accepts food donations.
+ */
 @Entity
 @Table(name = "sharing_points")
 public class SharingPoint {

@@ -10,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Tells Spring Security how to load "our" User by email so it can check
- * a submitted password against the stored password_hash. This bridges our
- * own User entity and Spring Security's generic UserDetails concept.
+ * a submitted password against the stored password_hash. This bridges User entity and Spring Security's generic UserDetails concept.
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

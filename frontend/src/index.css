@@ -34,6 +34,9 @@
   --color-overdue: #c92a2a;
   --color-overdue-bg: #ffe3e3;
 
+  --color-neutral: #868e96;
+  --color-neutral-bg: #f1f3f5;
+
   --radius: 10px;
   --radius-sm: 6px;
   --shadow: 0 1px 2px rgba(36, 41, 31, 0.06), 0 4px 12px rgba(36, 41, 31, 0.05);
@@ -55,12 +58,63 @@ h1,
 h2,
 h3 {
   margin: 0;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+h2 {
+  font-size: 22px;
 }
 
 a {
   color: var(--color-primary-dark);
+}
+
+/* --- Brand (fridge icon + "ShelfApp" wordmark) --- */
+
+.brand-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--color-primary);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 21px;
+}
+
+.brand-accent {
+  color: var(--color-primary);
+}
+
+/* --- Section/card labels - small uppercase "eyebrow" style, so the
+   bigger page titles (h2) stay the clear visual anchor on each page --- */
+
+.card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 14px;
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  font-size: 14.5px;
+  margin: 4px 0 20px;
 }
 
 /* --- Layout --- */
@@ -90,7 +144,7 @@ a {
 
 .navbar-brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 20px;
 }
 
@@ -127,12 +181,6 @@ a {
   box-shadow: var(--shadow);
   padding: 20px;
   margin-bottom: 20px;
-}
-
-.card-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0 0 12px;
 }
 
 /* --- Buttons --- */
@@ -372,8 +420,9 @@ select.input:focus {
 .stat-tile {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 16px 12px;
+  padding: 15px 12px;
   text-align: center;
 }
 
@@ -389,10 +438,99 @@ select.input:focus {
   margin-top: 2px;
 }
 
+/* Color-code each status tile to match its badge/chart color elsewhere
+   in the app, so "Active/Consumed/Donated/Wasted" read consistently
+   wherever they show up. */
+
+.stat-tile-active { border-top-color: var(--color-active); }
+.stat-tile-active .stat-tile-value { color: var(--color-active); }
+
+.stat-tile-consumed { border-top-color: var(--color-consumed); }
+.stat-tile-consumed .stat-tile-value { color: var(--color-consumed); }
+
+.stat-tile-donated { border-top-color: var(--color-donated); }
+.stat-tile-donated .stat-tile-value { color: var(--color-donated); }
+
+.stat-tile-wasted { border-top-color: var(--color-wasted); }
+.stat-tile-wasted .stat-tile-value { color: var(--color-wasted); }
+
+.section-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 10px;
+}
+
+/* --- Waste rate "hero" card - the headline stat, given its own
+   prominent spot above the tile grids instead of a plain paragraph --- */
+
+.waste-hero {
+  margin-bottom: 24px;
+  border-left: 4px solid var(--color-border);
+}
+
+.waste-hero-body {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.waste-hero-number {
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 96px;
+}
+
+.waste-hero-details {
+  flex: 1;
+  min-width: 220px;
+}
+
+.waste-hero-copy {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.waste-hero-good {
+  border-left-color: var(--color-primary);
+}
+.waste-hero-good .waste-hero-number {
+  color: var(--color-primary-dark);
+}
+.waste-hero-good .progress-fill {
+  background: var(--color-primary);
+}
+
+.waste-hero-okay {
+  border-left-color: var(--color-warning);
+}
+.waste-hero-okay .waste-hero-number {
+  color: var(--color-warning);
+}
+.waste-hero-okay .progress-fill {
+  background: var(--color-warning);
+}
+
+.waste-hero-bad {
+  border-left-color: var(--color-wasted);
+}
+.waste-hero-bad .waste-hero-number {
+  color: var(--color-wasted);
+}
+.waste-hero-bad .progress-fill {
+  background: var(--color-wasted);
+}
+
 .progress-track {
   background: var(--color-bg);
   border-radius: 999px;
-  height: 10px;
+  height: 12px;
   overflow: hidden;
   margin-top: 10px;
 }
@@ -401,6 +539,7 @@ select.input:focus {
   background: var(--color-wasted);
   height: 100%;
   border-radius: 999px;
+  transition: width 0.4s ease;
 }
 
 /* --- Inner tabs (e.g. Numbers / Charts inside Statistics) --- */
@@ -431,6 +570,31 @@ select.input:focus {
 .tab.active {
   color: var(--color-primary-dark);
   border-bottom-color: var(--color-primary);
+}
+
+/* --- Statistics "Charts" tab dashboard layout - the monthly trend runs
+   full-width up top, the bar and donut charts sit side by side below,
+   collapsing to a single column on narrower screens --- */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.charts-grid .card {
+  margin-bottom: 0;
+}
+
+.chart-span-full {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 720px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --- Simple charts (plain SVG/div, no extra library needed) --- */
@@ -472,6 +636,65 @@ select.input:focus {
   flex-shrink: 0;
 }
 
+/* --- Monthly trend chart (waste vs. donations, last 6 months) --- */
+
+.trend-chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  height: 160px;
+  padding-top: 8px;
+}
+
+.trend-month {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  height: 100%;
+}
+
+.trend-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  height: 100%;
+}
+
+.trend-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+  height: 100%;
+}
+
+.trend-bar-value {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.trend-bar {
+  width: 10px;
+  min-height: 2px;
+  border-radius: 3px 3px 0 0;
+  transition: height 0.3s;
+}
+
+.trend-month-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
 .donut-wrap {
   display: flex;
   align-items: center;
@@ -488,8 +711,16 @@ select.input:focus {
 .chart-legend-item {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
   font-size: 13.5px;
+}
+
+.chart-legend-value {
+  font-weight: 700;
+  color: var(--color-text);
+  font-size: 13px;
+  white-space: nowrap;
 }
 
 .chart-legend-dot {

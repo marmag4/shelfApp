@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Feature #5: statistics about the logged-in user's own pantry activity.
+ * Statistics about the logged-in user's own pantry activity.
  */
 @RestController
 @RequestMapping("/api/stats")

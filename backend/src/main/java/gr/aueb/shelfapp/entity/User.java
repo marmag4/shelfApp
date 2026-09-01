@@ -9,7 +9,8 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/** Maps to the "users" table we already created in schema.sql. */
+/** Maps to the "users" table we already created in schema.sql.
+ */
 @Entity
 @Table(name = "users")
 public class User {

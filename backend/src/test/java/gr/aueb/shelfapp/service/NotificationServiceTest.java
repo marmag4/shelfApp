@@ -19,8 +19,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * Tests the "how urgent is this?" logic in NotificationService - the rule
- * behind feature #1 (warn before food expires). Uses real Product objects
+ * Tests the "how urgent is this?" logic in NotificationService-the rule
+ * behind warn before food expires. Uses real Product objects
  * (just built with `new`, never saved) instead of mocks, since all we need
  * from them here is a real expiry date for the date-math to work on.
  */

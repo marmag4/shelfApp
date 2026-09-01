@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * The Repository layer: talks to the database, nothing else.
- * Spring Data JPA writes the implementation for us at startup.
+ * Spring Data JPA writes the implementation at startup.
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 }

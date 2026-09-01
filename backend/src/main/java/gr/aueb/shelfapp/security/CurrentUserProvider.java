@@ -9,10 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Small helper so controllers can ask "who is making this request?" instead
- * of trusting a userId sent by the client. JwtAuthFilter already put the
- * logged-in user's email into Spring Security's context earlier in the
- * request; here we just look up the matching User row and return its id.
+ Just look up the matching User row and return its id.
  */
 @Component
 public class CurrentUserProvider {

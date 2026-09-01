@@ -8,11 +8,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * What the client sends us to add a product to the pantry.
- * Note: no userId here - the product always belongs to whoever is logged
- * in (read from the JWT in the controller), never to a user id chosen by
- * the client.
- */
+ * What the client sends to add a product to the pantry.
+  */
 public record CreateProductRequest(
         @NotBlank String name,
         @NotNull @DecimalMin(value = "0.01", message = "Quantity must be greater than zero") BigDecimal quantity,

@@ -10,7 +10,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByUserId(Long userId);
 
-    /** Used for the expiry-notifications feature: still-active products expiring soon (or already overdue). */
+    /** Used for the expiry-notifications feature: still-active products expiring soon. */
     List<Product> findByUserIdAndStatusAndExpiryDateLessThanEqual(
             Long userId, ProductStatus status, LocalDate maxExpiryDate);
+
+    /** Used by the auto-waste sweep: still-active products whose expiry date has already passed. */
+    List<Product> findByStatusAndExpiryDateLessThan(ProductStatus status, LocalDate date);
 }
