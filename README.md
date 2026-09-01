@@ -22,12 +22,12 @@ pantry categories any time.
 
 ## Domain model
 
-- Category — Dairy, Fruits, Vegetables
-- User — one account per person, password hashed
-- Product — name, quantity, unit, expiry date, status; belongs to a category and a user
-- WasteLog — created when a product is wasted
-- SharingPoint — a place that accepts donations
-- Donation — created when a product is donated
+- Category - Dairy, Fruits, Vegetables
+- User - one account per person, password hashed
+- Product - name, quantity, unit, expiry date, status; belongs to a category and a user
+- WasteLog - created when a product is wasted
+- SharingPoint - a place that accepts donations
+- Donation - created when a product is donated
 
 Full schema: `schema.sql`.
 
@@ -43,7 +43,7 @@ Then open:
 
 - Frontend: http://localhost:5173
 - Swagger: http://localhost:8080/swagger-ui/index.html
-
+ 
 Register an account and log in. To stop: `docker compose down`.
 
 ## Run it for local development
